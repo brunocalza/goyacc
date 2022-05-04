@@ -2,11 +2,25 @@
 state 0
 	$accept: .start $end 
 
-	NUMBER  shift 3
-	IDENTIFIER  shift 4
+	IDENTIFIER  shift 18
+	STRING  shift 10
+	INTEGRAL  shift 11
+	HEXNUM  shift 14
+	FLOAT  shift 12
+	BLOB  shift 13
+	TRUE  shift 15
+	FALSE  shift 16
+	NULL  shift 17
+	CAST  shift 9
+	NOT  shift 4
+	'!'  shift 8
 	.  error
 
 	expr  goto 2
+	value_expr  goto 3
+	function_call_keyword  goto 5
+	column_name  goto 7
+	value_literal  goto 6
 	start  goto 1
 
 state 1
@@ -18,70 +32,461 @@ state 1
 
 state 2
 	start:  expr.    (1)
-	expr:  expr.CMPOP expr 
-	expr:  expr.LOP expr 
+	expr:  expr.AND expr 
+	expr:  expr.OR expr 
+	expr:  expr.IS expr 
+	expr:  expr.ISNULL 
+	expr:  expr.NOTNULL 
 
-	LOP  shift 6
-	CMPOP  shift 5
-	.  reduce 1 (src line 23)
+	OR  shift 20
+	AND  shift 19
+	IS  shift 21
+	ISNULL  shift 22
+	NOTNULL  shift 23
+	.  reduce 1 (src line 39)
 
 
 state 3
-	expr:  NUMBER.    (2)
+	expr:  value_expr.    (26)
+	expr:  value_expr.cmp_op value_expr 
 
-	.  reduce 2 (src line 25)
+	'='  shift 25
+	NE  shift 30
+	'<'  shift 26
+	'>'  shift 27
+	LE  shift 28
+	GE  shift 29
+	.  reduce 26 (src line 135)
 
+	cmp_op  goto 24
 
 state 4
-	expr:  IDENTIFIER.    (3)
+	expr:  NOT.expr 
 
-	.  reduce 3 (src line 27)
+	IDENTIFIER  shift 18
+	STRING  shift 10
+	INTEGRAL  shift 11
+	HEXNUM  shift 14
+	FLOAT  shift 12
+	BLOB  shift 13
+	TRUE  shift 15
+	FALSE  shift 16
+	NULL  shift 17
+	CAST  shift 9
+	NOT  shift 4
+	'!'  shift 8
+	.  error
 
+	expr  goto 31
+	value_expr  goto 3
+	function_call_keyword  goto 5
+	column_name  goto 7
+	value_literal  goto 6
 
 state 5
-	expr:  expr CMPOP.expr 
+	expr:  function_call_keyword.    (34)
 
-	NUMBER  shift 3
-	IDENTIFIER  shift 4
-	.  error
+	.  reduce 34 (src line 165)
 
-	expr  goto 7
 
 state 6
-	expr:  expr LOP.expr 
+	value_expr:  value_literal.    (11)
 
-	NUMBER  shift 3
-	IDENTIFIER  shift 4
-	.  error
+	.  reduce 11 (src line 88)
 
-	expr  goto 8
 
 state 7
-	expr:  expr.CMPOP expr 
-	expr:  expr CMPOP expr.    (4)
-	expr:  expr.LOP expr 
+	value_expr:  column_name.    (12)
 
-	.  reduce 4 (src line 28)
+	.  reduce 12 (src line 90)
 
 
 state 8
-	expr:  expr.CMPOP expr 
-	expr:  expr.LOP expr 
-	expr:  expr LOP expr.    (5)
+	value_expr:  '!'.value_expr 
 
-	CMPOP  shift 5
-	.  reduce 5 (src line 29)
+	IDENTIFIER  shift 18
+	STRING  shift 10
+	INTEGRAL  shift 11
+	HEXNUM  shift 14
+	FLOAT  shift 12
+	BLOB  shift 13
+	TRUE  shift 15
+	FALSE  shift 16
+	NULL  shift 17
+	'!'  shift 8
+	.  error
+
+	value_expr  goto 32
+	column_name  goto 7
+	value_literal  goto 6
+
+state 9
+	function_call_keyword:  CAST.'(' expr AS convert_type ')' 
+
+	'('  shift 33
+	.  error
 
 
-7 terminals, 3 nonterminals
-6 grammar rules, 9/16000 states
+state 10
+	value_literal:  STRING.    (2)
+
+	.  reduce 2 (src line 43)
+
+
+state 11
+	value_literal:  INTEGRAL.    (3)
+
+	.  reduce 3 (src line 48)
+
+
+state 12
+	value_literal:  FLOAT.    (4)
+
+	.  reduce 4 (src line 52)
+
+
+state 13
+	value_literal:  BLOB.    (5)
+
+	.  reduce 5 (src line 56)
+
+
+state 14
+	value_literal:  HEXNUM.    (6)
+
+	.  reduce 6 (src line 60)
+
+
+state 15
+	value_literal:  TRUE.    (7)
+
+	.  reduce 7 (src line 64)
+
+
+state 16
+	value_literal:  FALSE.    (8)
+
+	.  reduce 8 (src line 68)
+
+
+state 17
+	value_literal:  NULL.    (9)
+
+	.  reduce 9 (src line 72)
+
+
+state 18
+	column_name:  IDENTIFIER.    (10)
+
+	.  reduce 10 (src line 78)
+
+
+state 19
+	expr:  expr AND.expr 
+
+	IDENTIFIER  shift 18
+	STRING  shift 10
+	INTEGRAL  shift 11
+	HEXNUM  shift 14
+	FLOAT  shift 12
+	BLOB  shift 13
+	TRUE  shift 15
+	FALSE  shift 16
+	NULL  shift 17
+	CAST  shift 9
+	NOT  shift 4
+	'!'  shift 8
+	.  error
+
+	expr  goto 34
+	value_expr  goto 3
+	function_call_keyword  goto 5
+	column_name  goto 7
+	value_literal  goto 6
+
+state 20
+	expr:  expr OR.expr 
+
+	IDENTIFIER  shift 18
+	STRING  shift 10
+	INTEGRAL  shift 11
+	HEXNUM  shift 14
+	FLOAT  shift 12
+	BLOB  shift 13
+	TRUE  shift 15
+	FALSE  shift 16
+	NULL  shift 17
+	CAST  shift 9
+	NOT  shift 4
+	'!'  shift 8
+	.  error
+
+	expr  goto 35
+	value_expr  goto 3
+	function_call_keyword  goto 5
+	column_name  goto 7
+	value_literal  goto 6
+
+state 21
+	expr:  expr IS.expr 
+
+	IDENTIFIER  shift 18
+	STRING  shift 10
+	INTEGRAL  shift 11
+	HEXNUM  shift 14
+	FLOAT  shift 12
+	BLOB  shift 13
+	TRUE  shift 15
+	FALSE  shift 16
+	NULL  shift 17
+	CAST  shift 9
+	NOT  shift 4
+	'!'  shift 8
+	.  error
+
+	expr  goto 36
+	value_expr  goto 3
+	function_call_keyword  goto 5
+	column_name  goto 7
+	value_literal  goto 6
+
+state 22
+	expr:  expr ISNULL.    (32)
+
+	.  reduce 32 (src line 157)
+
+
+state 23
+	expr:  expr NOTNULL.    (33)
+
+	.  reduce 33 (src line 161)
+
+
+state 24
+	expr:  value_expr cmp_op.value_expr 
+
+	IDENTIFIER  shift 18
+	STRING  shift 10
+	INTEGRAL  shift 11
+	HEXNUM  shift 14
+	FLOAT  shift 12
+	BLOB  shift 13
+	TRUE  shift 15
+	FALSE  shift 16
+	NULL  shift 17
+	'!'  shift 8
+	.  error
+
+	value_expr  goto 37
+	column_name  goto 7
+	value_literal  goto 6
+
+state 25
+	cmp_op:  '='.    (14)
+
+	.  reduce 14 (src line 96)
+
+
+state 26
+	cmp_op:  '<'.    (15)
+
+	.  reduce 15 (src line 101)
+
+
+state 27
+	cmp_op:  '>'.    (16)
+
+	.  reduce 16 (src line 105)
+
+
+state 28
+	cmp_op:  LE.    (17)
+
+	.  reduce 17 (src line 109)
+
+
+state 29
+	cmp_op:  GE.    (18)
+
+	.  reduce 18 (src line 113)
+
+
+state 30
+	cmp_op:  NE.    (19)
+
+	.  reduce 19 (src line 117)
+
+
+state 31
+	expr:  expr.AND expr 
+	expr:  expr.OR expr 
+	expr:  NOT expr.    (30)
+	expr:  expr.IS expr 
+	expr:  expr.ISNULL 
+	expr:  expr.NOTNULL 
+
+	IS  shift 21
+	ISNULL  shift 22
+	NOTNULL  shift 23
+	.  reduce 30 (src line 149)
+
+
+state 32
+	value_expr:  '!' value_expr.    (13)
+
+	.  reduce 13 (src line 91)
+
+
+state 33
+	function_call_keyword:  CAST '('.expr AS convert_type ')' 
+
+	IDENTIFIER  shift 18
+	STRING  shift 10
+	INTEGRAL  shift 11
+	HEXNUM  shift 14
+	FLOAT  shift 12
+	BLOB  shift 13
+	TRUE  shift 15
+	FALSE  shift 16
+	NULL  shift 17
+	CAST  shift 9
+	NOT  shift 4
+	'!'  shift 8
+	.  error
+
+	expr  goto 38
+	value_expr  goto 3
+	function_call_keyword  goto 5
+	column_name  goto 7
+	value_literal  goto 6
+
+state 34
+	expr:  expr.AND expr 
+	expr:  expr AND expr.    (28)
+	expr:  expr.OR expr 
+	expr:  expr.IS expr 
+	expr:  expr.ISNULL 
+	expr:  expr.NOTNULL 
+
+	IS  shift 21
+	ISNULL  shift 22
+	NOTNULL  shift 23
+	.  reduce 28 (src line 141)
+
+
+state 35
+	expr:  expr.AND expr 
+	expr:  expr.OR expr 
+	expr:  expr OR expr.    (29)
+	expr:  expr.IS expr 
+	expr:  expr.ISNULL 
+	expr:  expr.NOTNULL 
+
+	AND  shift 19
+	IS  shift 21
+	ISNULL  shift 22
+	NOTNULL  shift 23
+	.  reduce 29 (src line 145)
+
+
+state 36
+	expr:  expr.AND expr 
+	expr:  expr.OR expr 
+	expr:  expr.IS expr 
+	expr:  expr IS expr.    (31)
+	expr:  expr.ISNULL 
+	expr:  expr.NOTNULL 
+
+	.  reduce 31 (src line 153)
+
+
+state 37
+	expr:  value_expr cmp_op value_expr.    (27)
+
+	.  reduce 27 (src line 137)
+
+
+state 38
+	function_call_keyword:  CAST '(' expr.AS convert_type ')' 
+	expr:  expr.AND expr 
+	expr:  expr.OR expr 
+	expr:  expr.IS expr 
+	expr:  expr.ISNULL 
+	expr:  expr.NOTNULL 
+
+	AS  shift 39
+	OR  shift 20
+	AND  shift 19
+	IS  shift 21
+	ISNULL  shift 22
+	NOTNULL  shift 23
+	.  error
+
+
+state 39
+	function_call_keyword:  CAST '(' expr AS.convert_type ')' 
+
+	NONE  shift 41
+	INTEGER  shift 44
+	NUMERIC  shift 45
+	REAL  shift 43
+	TEXT  shift 42
+	.  error
+
+	convert_type  goto 40
+
+state 40
+	function_call_keyword:  CAST '(' expr AS convert_type.')' 
+
+	')'  shift 46
+	.  error
+
+
+state 41
+	convert_type:  NONE.    (20)
+
+	.  reduce 20 (src line 122)
+
+
+state 42
+	convert_type:  TEXT.    (21)
+
+	.  reduce 21 (src line 124)
+
+
+state 43
+	convert_type:  REAL.    (22)
+
+	.  reduce 22 (src line 125)
+
+
+state 44
+	convert_type:  INTEGER.    (23)
+
+	.  reduce 23 (src line 126)
+
+
+state 45
+	convert_type:  NUMERIC.    (24)
+
+	.  reduce 24 (src line 127)
+
+
+state 46
+	function_call_keyword:  CAST '(' expr AS convert_type ')'.    (25)
+
+	.  reduce 25 (src line 129)
+
+
+37 terminals, 9 nonterminals
+35 grammar rules, 47/16000 states
 0 shift/reduce, 0 reduce/reduce conflicts reported
-52 working sets used
-memory: parser 3/240000
-0 extra closures
-9 shift entries, 1 exceptions
-4 goto entries
-0 entries saved by goto default
-Optimizer space used: output 10/240000
-10 table entries, 1 zero
-maximum spread: 7, maximum offset: 7
+58 working sets used
+memory: parser 41/240000
+33 extra closures
+126 shift entries, 1 exceptions
+15 goto entries
+24 entries saved by goto default
+Optimizer space used: output 78/240000
+78 table entries, 10 zero
+maximum spread: 37, maximum offset: 35

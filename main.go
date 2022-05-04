@@ -4,20 +4,14 @@ import (
 	"fmt"
 )
 
-//go:generate go run golang.org/x/tools/cmd/goyacc@master -l -o parser.go grammar.y
+//go:generate go run golang.org/x/tools/cmd/goyacc@master -l -o yy_parser.go grammar.y
 
 func main() {
 	yyErrorVerbose = true
-	l := Lexer{input: "c OR b AND 12121 = 3"}
-	l.readChar()
+	l := Lexer{input: []byte("_1 OR b AND 12121 = 3")}
+	l.readByte()
 
 	yyParse(&l)
 
-	fmt.Printf("%v\n", l.ast.(*astRoot).expr.(*LogicalExpr).left.(*LogicalExpr).left)
-	fmt.Printf("%v\n", l.ast.(*astRoot).expr.(*LogicalExpr).left.(*LogicalExpr).op)
-	fmt.Printf("%v\n", l.ast.(*astRoot).expr.(*LogicalExpr).left.(*LogicalExpr).right)
-	fmt.Printf("%v\n", l.ast.(*astRoot).expr.(*LogicalExpr).op)
-	fmt.Printf("%v\n", l.ast.(*astRoot).expr.(*LogicalExpr).right.(*CmpExpr).left)
-	fmt.Printf("%v\n", l.ast.(*astRoot).expr.(*LogicalExpr).right.(*CmpExpr).op)
-	fmt.Printf("%v\n", l.ast.(*astRoot).expr.(*LogicalExpr).right.(*CmpExpr).right)
+	fmt.Println(Deparse(l.ast))
 }
