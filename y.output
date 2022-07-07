@@ -2,25 +2,20 @@
 state 0
 	$accept: .start $end 
 
-	IDENTIFIER  shift 18
-	STRING  shift 10
-	INTEGRAL  shift 11
-	HEXNUM  shift 14
-	FLOAT  shift 12
-	BLOB  shift 13
-	TRUE  shift 15
-	FALSE  shift 16
-	NULL  shift 17
-	CAST  shift 9
-	NOT  shift 4
-	'!'  shift 8
+	'('  shift 4
+	'2'  shift 6
+	'3'  shift 7
+	'4'  shift 8
+	'5'  shift 9
+	'6'  shift 10
+	'7'  shift 11
+	'8'  shift 12
+	'9'  shift 13
 	.  error
 
-	expr  goto 2
-	value_expr  goto 3
-	function_call_keyword  goto 5
-	column_name  goto 7
-	value_literal  goto 6
+	digit_2_9  goto 5
+	area_code  goto 3
+	phone_number  goto 2
 	start  goto 1
 
 state 1
@@ -31,462 +26,463 @@ state 1
 
 
 state 2
-	start:  expr.    (1)
-	expr:  expr.AND expr 
-	expr:  expr.OR expr 
-	expr:  expr.IS expr 
-	expr:  expr.ISNULL 
-	expr:  expr.NOTNULL 
+	start:  phone_number.    (1)
 
-	OR  shift 20
-	AND  shift 19
-	IS  shift 21
-	ISNULL  shift 22
-	NOTNULL  shift 23
-	.  reduce 1 (src line 39)
+	.  reduce 1 (src line 43)
 
 
 state 3
-	expr:  value_expr.    (26)
-	expr:  value_expr.cmp_op value_expr 
+	phone_number:  area_code.'-' exchange '-' subscriber 
+	phone_number:  area_code.' ' exchange ' ' subscriber 
+	phone_number:  area_code.'.' exchange '.' subscriber 
 
-	'='  shift 25
-	NE  shift 30
-	'<'  shift 26
-	'>'  shift 27
-	LE  shift 28
-	GE  shift 29
-	.  reduce 26 (src line 135)
-
-	cmp_op  goto 24
-
-state 4
-	expr:  NOT.expr 
-
-	IDENTIFIER  shift 18
-	STRING  shift 10
-	INTEGRAL  shift 11
-	HEXNUM  shift 14
-	FLOAT  shift 12
-	BLOB  shift 13
-	TRUE  shift 15
-	FALSE  shift 16
-	NULL  shift 17
-	CAST  shift 9
-	NOT  shift 4
-	'!'  shift 8
+	'-'  shift 14
+	'.'  shift 16
+	' '  shift 15
 	.  error
 
-	expr  goto 31
-	value_expr  goto 3
-	function_call_keyword  goto 5
-	column_name  goto 7
-	value_literal  goto 6
+
+state 4
+	phone_number:  '('.area_code ')' ' ' exchange '-' subscriber 
+
+	'2'  shift 6
+	'3'  shift 7
+	'4'  shift 8
+	'5'  shift 9
+	'6'  shift 10
+	'7'  shift 11
+	'8'  shift 12
+	'9'  shift 13
+	.  error
+
+	digit_2_9  goto 5
+	area_code  goto 17
 
 state 5
-	expr:  function_call_keyword.    (34)
+	area_code:  digit_2_9.digit digit 
 
-	.  reduce 34 (src line 165)
+	'0'  shift 19
+	'1'  shift 20
+	'2'  shift 6
+	'3'  shift 7
+	'4'  shift 8
+	'5'  shift 9
+	'6'  shift 10
+	'7'  shift 11
+	'8'  shift 12
+	'9'  shift 13
+	.  error
 
+	digit_2_9  goto 21
+	digit  goto 18
 
 state 6
-	value_expr:  value_literal.    (11)
+	digit_2_9:  '2'.    (9)
 
-	.  reduce 11 (src line 88)
+	.  reduce 9 (src line 85)
 
 
 state 7
-	value_expr:  column_name.    (12)
+	digit_2_9:  '3'.    (10)
 
-	.  reduce 12 (src line 90)
+	.  reduce 10 (src line 90)
 
 
 state 8
-	value_expr:  '!'.value_expr 
+	digit_2_9:  '4'.    (11)
 
-	IDENTIFIER  shift 18
-	STRING  shift 10
-	INTEGRAL  shift 11
-	HEXNUM  shift 14
-	FLOAT  shift 12
-	BLOB  shift 13
-	TRUE  shift 15
-	FALSE  shift 16
-	NULL  shift 17
-	'!'  shift 8
-	.  error
+	.  reduce 11 (src line 94)
 
-	value_expr  goto 32
-	column_name  goto 7
-	value_literal  goto 6
 
 state 9
-	function_call_keyword:  CAST.'(' expr AS convert_type ')' 
+	digit_2_9:  '5'.    (12)
 
-	'('  shift 33
-	.  error
+	.  reduce 12 (src line 98)
 
 
 state 10
-	value_literal:  STRING.    (2)
+	digit_2_9:  '6'.    (13)
 
-	.  reduce 2 (src line 43)
+	.  reduce 13 (src line 102)
 
 
 state 11
-	value_literal:  INTEGRAL.    (3)
+	digit_2_9:  '7'.    (14)
 
-	.  reduce 3 (src line 48)
+	.  reduce 14 (src line 106)
 
 
 state 12
-	value_literal:  FLOAT.    (4)
+	digit_2_9:  '8'.    (15)
 
-	.  reduce 4 (src line 52)
+	.  reduce 15 (src line 110)
 
 
 state 13
-	value_literal:  BLOB.    (5)
+	digit_2_9:  '9'.    (16)
 
-	.  reduce 5 (src line 56)
+	.  reduce 16 (src line 114)
 
 
 state 14
-	value_literal:  HEXNUM.    (6)
+	phone_number:  area_code '-'.exchange '-' subscriber 
 
-	.  reduce 6 (src line 60)
+	'2'  shift 6
+	'3'  shift 7
+	'4'  shift 8
+	'5'  shift 9
+	'6'  shift 10
+	'7'  shift 11
+	'8'  shift 12
+	'9'  shift 13
+	.  error
 
+	digit_2_9  goto 23
+	exchange  goto 22
 
 state 15
-	value_literal:  TRUE.    (7)
+	phone_number:  area_code ' '.exchange ' ' subscriber 
 
-	.  reduce 7 (src line 64)
+	'2'  shift 6
+	'3'  shift 7
+	'4'  shift 8
+	'5'  shift 9
+	'6'  shift 10
+	'7'  shift 11
+	'8'  shift 12
+	'9'  shift 13
+	.  error
 
+	digit_2_9  goto 23
+	exchange  goto 24
 
 state 16
-	value_literal:  FALSE.    (8)
+	phone_number:  area_code '.'.exchange '.' subscriber 
 
-	.  reduce 8 (src line 68)
+	'2'  shift 6
+	'3'  shift 7
+	'4'  shift 8
+	'5'  shift 9
+	'6'  shift 10
+	'7'  shift 11
+	'8'  shift 12
+	'9'  shift 13
+	.  error
 
+	digit_2_9  goto 23
+	exchange  goto 25
 
 state 17
-	value_literal:  NULL.    (9)
+	phone_number:  '(' area_code.')' ' ' exchange '-' subscriber 
 
-	.  reduce 9 (src line 72)
+	')'  shift 26
+	.  error
 
 
 state 18
-	column_name:  IDENTIFIER.    (10)
+	area_code:  digit_2_9 digit.digit 
 
-	.  reduce 10 (src line 78)
+	'0'  shift 19
+	'1'  shift 20
+	'2'  shift 6
+	'3'  shift 7
+	'4'  shift 8
+	'5'  shift 9
+	'6'  shift 10
+	'7'  shift 11
+	'8'  shift 12
+	'9'  shift 13
+	.  error
 
+	digit_2_9  goto 21
+	digit  goto 27
 
 state 19
-	expr:  expr AND.expr 
+	digit:  '0'.    (17)
 
-	IDENTIFIER  shift 18
-	STRING  shift 10
-	INTEGRAL  shift 11
-	HEXNUM  shift 14
-	FLOAT  shift 12
-	BLOB  shift 13
-	TRUE  shift 15
-	FALSE  shift 16
-	NULL  shift 17
-	CAST  shift 9
-	NOT  shift 4
-	'!'  shift 8
-	.  error
+	.  reduce 17 (src line 119)
 
-	expr  goto 34
-	value_expr  goto 3
-	function_call_keyword  goto 5
-	column_name  goto 7
-	value_literal  goto 6
 
 state 20
-	expr:  expr OR.expr 
+	digit:  '1'.    (18)
 
-	IDENTIFIER  shift 18
-	STRING  shift 10
-	INTEGRAL  shift 11
-	HEXNUM  shift 14
-	FLOAT  shift 12
-	BLOB  shift 13
-	TRUE  shift 15
-	FALSE  shift 16
-	NULL  shift 17
-	CAST  shift 9
-	NOT  shift 4
-	'!'  shift 8
-	.  error
+	.  reduce 18 (src line 124)
 
-	expr  goto 35
-	value_expr  goto 3
-	function_call_keyword  goto 5
-	column_name  goto 7
-	value_literal  goto 6
 
 state 21
-	expr:  expr IS.expr 
+	digit:  digit_2_9.    (19)
 
-	IDENTIFIER  shift 18
-	STRING  shift 10
-	INTEGRAL  shift 11
-	HEXNUM  shift 14
-	FLOAT  shift 12
-	BLOB  shift 13
-	TRUE  shift 15
-	FALSE  shift 16
-	NULL  shift 17
-	CAST  shift 9
-	NOT  shift 4
-	'!'  shift 8
-	.  error
+	.  reduce 19 (src line 128)
 
-	expr  goto 36
-	value_expr  goto 3
-	function_call_keyword  goto 5
-	column_name  goto 7
-	value_literal  goto 6
 
 state 22
-	expr:  expr ISNULL.    (32)
+	phone_number:  area_code '-' exchange.'-' subscriber 
 
-	.  reduce 32 (src line 157)
+	'-'  shift 28
+	.  error
 
 
 state 23
-	expr:  expr NOTNULL.    (33)
+	exchange:  digit_2_9.digit digit 
 
-	.  reduce 33 (src line 161)
-
-
-state 24
-	expr:  value_expr cmp_op.value_expr 
-
-	IDENTIFIER  shift 18
-	STRING  shift 10
-	INTEGRAL  shift 11
-	HEXNUM  shift 14
-	FLOAT  shift 12
-	BLOB  shift 13
-	TRUE  shift 15
-	FALSE  shift 16
-	NULL  shift 17
-	'!'  shift 8
+	'0'  shift 19
+	'1'  shift 20
+	'2'  shift 6
+	'3'  shift 7
+	'4'  shift 8
+	'5'  shift 9
+	'6'  shift 10
+	'7'  shift 11
+	'8'  shift 12
+	'9'  shift 13
 	.  error
 
-	value_expr  goto 37
-	column_name  goto 7
-	value_literal  goto 6
+	digit_2_9  goto 21
+	digit  goto 29
+
+state 24
+	phone_number:  area_code ' ' exchange.' ' subscriber 
+
+	' '  shift 30
+	.  error
+
 
 state 25
-	cmp_op:  '='.    (14)
+	phone_number:  area_code '.' exchange.'.' subscriber 
 
-	.  reduce 14 (src line 96)
+	'.'  shift 31
+	.  error
 
 
 state 26
-	cmp_op:  '<'.    (15)
+	phone_number:  '(' area_code ')'.' ' exchange '-' subscriber 
 
-	.  reduce 15 (src line 101)
+	' '  shift 32
+	.  error
 
 
 state 27
-	cmp_op:  '>'.    (16)
+	area_code:  digit_2_9 digit digit.    (6)
 
-	.  reduce 16 (src line 105)
+	.  reduce 6 (src line 67)
 
 
 state 28
-	cmp_op:  LE.    (17)
+	phone_number:  area_code '-' exchange '-'.subscriber 
 
-	.  reduce 17 (src line 109)
-
-
-state 29
-	cmp_op:  GE.    (18)
-
-	.  reduce 18 (src line 113)
-
-
-state 30
-	cmp_op:  NE.    (19)
-
-	.  reduce 19 (src line 117)
-
-
-state 31
-	expr:  expr.AND expr 
-	expr:  expr.OR expr 
-	expr:  NOT expr.    (30)
-	expr:  expr.IS expr 
-	expr:  expr.ISNULL 
-	expr:  expr.NOTNULL 
-
-	IS  shift 21
-	ISNULL  shift 22
-	NOTNULL  shift 23
-	.  reduce 30 (src line 149)
-
-
-state 32
-	value_expr:  '!' value_expr.    (13)
-
-	.  reduce 13 (src line 91)
-
-
-state 33
-	function_call_keyword:  CAST '('.expr AS convert_type ')' 
-
-	IDENTIFIER  shift 18
-	STRING  shift 10
-	INTEGRAL  shift 11
-	HEXNUM  shift 14
-	FLOAT  shift 12
-	BLOB  shift 13
-	TRUE  shift 15
-	FALSE  shift 16
-	NULL  shift 17
-	CAST  shift 9
-	NOT  shift 4
-	'!'  shift 8
+	'0'  shift 19
+	'1'  shift 20
+	'2'  shift 6
+	'3'  shift 7
+	'4'  shift 8
+	'5'  shift 9
+	'6'  shift 10
+	'7'  shift 11
+	'8'  shift 12
+	'9'  shift 13
 	.  error
 
-	expr  goto 38
-	value_expr  goto 3
-	function_call_keyword  goto 5
-	column_name  goto 7
-	value_literal  goto 6
+	digit_2_9  goto 21
+	digit  goto 34
+	subscriber  goto 33
+
+state 29
+	exchange:  digit_2_9 digit.digit 
+
+	'0'  shift 19
+	'1'  shift 20
+	'2'  shift 6
+	'3'  shift 7
+	'4'  shift 8
+	'5'  shift 9
+	'6'  shift 10
+	'7'  shift 11
+	'8'  shift 12
+	'9'  shift 13
+	.  error
+
+	digit_2_9  goto 21
+	digit  goto 35
+
+state 30
+	phone_number:  area_code ' ' exchange ' '.subscriber 
+
+	'0'  shift 19
+	'1'  shift 20
+	'2'  shift 6
+	'3'  shift 7
+	'4'  shift 8
+	'5'  shift 9
+	'6'  shift 10
+	'7'  shift 11
+	'8'  shift 12
+	'9'  shift 13
+	.  error
+
+	digit_2_9  goto 21
+	digit  goto 34
+	subscriber  goto 36
+
+state 31
+	phone_number:  area_code '.' exchange '.'.subscriber 
+
+	'0'  shift 19
+	'1'  shift 20
+	'2'  shift 6
+	'3'  shift 7
+	'4'  shift 8
+	'5'  shift 9
+	'6'  shift 10
+	'7'  shift 11
+	'8'  shift 12
+	'9'  shift 13
+	.  error
+
+	digit_2_9  goto 21
+	digit  goto 34
+	subscriber  goto 37
+
+state 32
+	phone_number:  '(' area_code ')' ' '.exchange '-' subscriber 
+
+	'2'  shift 6
+	'3'  shift 7
+	'4'  shift 8
+	'5'  shift 9
+	'6'  shift 10
+	'7'  shift 11
+	'8'  shift 12
+	'9'  shift 13
+	.  error
+
+	digit_2_9  goto 23
+	exchange  goto 38
+
+state 33
+	phone_number:  area_code '-' exchange '-' subscriber.    (2)
+
+	.  reduce 2 (src line 49)
+
 
 state 34
-	expr:  expr.AND expr 
-	expr:  expr AND expr.    (28)
-	expr:  expr.OR expr 
-	expr:  expr.IS expr 
-	expr:  expr.ISNULL 
-	expr:  expr.NOTNULL 
+	subscriber:  digit.digit digit digit 
 
-	IS  shift 21
-	ISNULL  shift 22
-	NOTNULL  shift 23
-	.  reduce 28 (src line 141)
+	'0'  shift 19
+	'1'  shift 20
+	'2'  shift 6
+	'3'  shift 7
+	'4'  shift 8
+	'5'  shift 9
+	'6'  shift 10
+	'7'  shift 11
+	'8'  shift 12
+	'9'  shift 13
+	.  error
 
+	digit_2_9  goto 21
+	digit  goto 39
 
 state 35
-	expr:  expr.AND expr 
-	expr:  expr.OR expr 
-	expr:  expr OR expr.    (29)
-	expr:  expr.IS expr 
-	expr:  expr.ISNULL 
-	expr:  expr.NOTNULL 
+	exchange:  digit_2_9 digit digit.    (7)
 
-	AND  shift 19
-	IS  shift 21
-	ISNULL  shift 22
-	NOTNULL  shift 23
-	.  reduce 29 (src line 145)
+	.  reduce 7 (src line 73)
 
 
 state 36
-	expr:  expr.AND expr 
-	expr:  expr.OR expr 
-	expr:  expr.IS expr 
-	expr:  expr IS expr.    (31)
-	expr:  expr.ISNULL 
-	expr:  expr.NOTNULL 
+	phone_number:  area_code ' ' exchange ' ' subscriber.    (4)
 
-	.  reduce 31 (src line 153)
+	.  reduce 4 (src line 58)
 
 
 state 37
-	expr:  value_expr cmp_op value_expr.    (27)
+	phone_number:  area_code '.' exchange '.' subscriber.    (5)
 
-	.  reduce 27 (src line 137)
+	.  reduce 5 (src line 62)
 
 
 state 38
-	function_call_keyword:  CAST '(' expr.AS convert_type ')' 
-	expr:  expr.AND expr 
-	expr:  expr.OR expr 
-	expr:  expr.IS expr 
-	expr:  expr.ISNULL 
-	expr:  expr.NOTNULL 
+	phone_number:  '(' area_code ')' ' ' exchange.'-' subscriber 
 
-	AS  shift 39
-	OR  shift 20
-	AND  shift 19
-	IS  shift 21
-	ISNULL  shift 22
-	NOTNULL  shift 23
+	'-'  shift 40
 	.  error
 
 
 state 39
-	function_call_keyword:  CAST '(' expr AS.convert_type ')' 
+	subscriber:  digit digit.digit digit 
 
-	NONE  shift 41
-	INTEGER  shift 44
-	NUMERIC  shift 45
-	REAL  shift 43
-	TEXT  shift 42
+	'0'  shift 19
+	'1'  shift 20
+	'2'  shift 6
+	'3'  shift 7
+	'4'  shift 8
+	'5'  shift 9
+	'6'  shift 10
+	'7'  shift 11
+	'8'  shift 12
+	'9'  shift 13
 	.  error
 
-	convert_type  goto 40
+	digit_2_9  goto 21
+	digit  goto 41
 
 state 40
-	function_call_keyword:  CAST '(' expr AS convert_type.')' 
+	phone_number:  '(' area_code ')' ' ' exchange '-'.subscriber 
 
-	')'  shift 46
+	'0'  shift 19
+	'1'  shift 20
+	'2'  shift 6
+	'3'  shift 7
+	'4'  shift 8
+	'5'  shift 9
+	'6'  shift 10
+	'7'  shift 11
+	'8'  shift 12
+	'9'  shift 13
 	.  error
 
+	digit_2_9  goto 21
+	digit  goto 34
+	subscriber  goto 42
 
 state 41
-	convert_type:  NONE.    (20)
+	subscriber:  digit digit digit.digit 
 
-	.  reduce 20 (src line 122)
+	'0'  shift 19
+	'1'  shift 20
+	'2'  shift 6
+	'3'  shift 7
+	'4'  shift 8
+	'5'  shift 9
+	'6'  shift 10
+	'7'  shift 11
+	'8'  shift 12
+	'9'  shift 13
+	.  error
 
+	digit_2_9  goto 21
+	digit  goto 43
 
 state 42
-	convert_type:  TEXT.    (21)
+	phone_number:  '(' area_code ')' ' ' exchange '-' subscriber.    (3)
 
-	.  reduce 21 (src line 124)
+	.  reduce 3 (src line 54)
 
 
 state 43
-	convert_type:  REAL.    (22)
+	subscriber:  digit digit digit digit.    (8)
 
-	.  reduce 22 (src line 125)
-
-
-state 44
-	convert_type:  INTEGER.    (23)
-
-	.  reduce 23 (src line 126)
+	.  reduce 8 (src line 79)
 
 
-state 45
-	convert_type:  NUMERIC.    (24)
-
-	.  reduce 24 (src line 127)
-
-
-state 46
-	function_call_keyword:  CAST '(' expr AS convert_type ')'.    (25)
-
-	.  reduce 25 (src line 129)
-
-
-37 terminals, 9 nonterminals
-35 grammar rules, 47/16000 states
+18 terminals, 8 nonterminals
+20 grammar rules, 44/16000 states
 0 shift/reduce, 0 reduce/reduce conflicts reported
-58 working sets used
+57 working sets used
 memory: parser 41/240000
-33 extra closures
-126 shift entries, 1 exceptions
-15 goto entries
-24 entries saved by goto default
-Optimizer space used: output 78/240000
-78 table entries, 10 zero
-maximum spread: 37, maximum offset: 35
+11 extra closures
+168 shift entries, 1 exceptions
+27 goto entries
+13 entries saved by goto default
+Optimizer space used: output 77/240000
+77 table entries, 14 zero
+maximum spread: 18, maximum offset: 41

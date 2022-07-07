@@ -1,17 +1,15 @@
 package main
 
-import (
-	"fmt"
-)
+import "fmt"
 
 //go:generate go run golang.org/x/tools/cmd/goyacc@master -l -o yy_parser.go grammar.y
 
 func main() {
-	yyErrorVerbose = true
-	l := Lexer{input: []byte("_1 OR b AND 12121 = 3")}
-	l.readByte()
 
-	yyParse(&l)
+	lexer := &Lexer{input: []byte("800.555.1234")}
+	yyDebug = 1
+	yyParse(lexer)
 
-	fmt.Println(Deparse(l.ast))
+	fmt.Println(lexer.phoneNumber)
+
 }

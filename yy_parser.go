@@ -3,85 +3,45 @@ package main
 
 import __yyfmt__ "fmt"
 
-const MaxColumnNameLength = 64
+type PhoneNumber struct {
+	AreaCode   AreaCode
+	Exchange   Exchange
+	Subscriber Subscriber
+}
+
+type AreaCode string
+type Exchange string
+type Subscriber string
 
 type yySymType struct {
 	yys         int
-	bool        bool
+	areaCode    AreaCode
+	exchange    Exchange
+	subscriber  Subscriber
+	phoneNumber PhoneNumber
+	byt         byte
 	string      string
-	bytes       []byte
-	expr        expr
-	cmpOp       CmpOperatorNode
-	column      *Column
-	convertType ConvertType
 }
-
-const IDENTIFIER = 57346
-const STRING = 57347
-const INTEGRAL = 57348
-const HEXNUM = 57349
-const FLOAT = 57350
-const BLOB = 57351
-const ERROR = 57352
-const TRUE = 57353
-const FALSE = 57354
-const NULL = 57355
-const NONE = 57356
-const INTEGER = 57357
-const NUMERIC = 57358
-const REAL = 57359
-const TEXT = 57360
-const CAST = 57361
-const AS = 57362
-const OR = 57363
-const AND = 57364
-const NOT = 57365
-const NE = 57366
-const LIKE = 57367
-const LE = 57368
-const GE = 57369
-const IS = 57370
-const ISNULL = 57371
-const NOTNULL = 57372
 
 var yyToknames = [...]string{
 	"$end",
 	"error",
 	"$unk",
-	"IDENTIFIER",
-	"STRING",
-	"INTEGRAL",
-	"HEXNUM",
-	"FLOAT",
-	"BLOB",
-	"ERROR",
-	"TRUE",
-	"FALSE",
-	"NULL",
 	"'('",
-	"','",
+	"'-'",
 	"')'",
-	"NONE",
-	"INTEGER",
-	"NUMERIC",
-	"REAL",
-	"TEXT",
-	"CAST",
-	"AS",
-	"OR",
-	"AND",
-	"NOT",
-	"'!'",
-	"'='",
-	"NE",
-	"LIKE",
-	"'<'",
-	"'>'",
-	"LE",
-	"GE",
-	"IS",
-	"ISNULL",
-	"NOTNULL",
+	"'.'",
+	"'0'",
+	"'1'",
+	"'2'",
+	"'3'",
+	"'4'",
+	"'5'",
+	"'6'",
+	"'7'",
+	"'8'",
+	"'9'",
+	"' '",
 }
 
 var yyStatenames = [...]string{}
@@ -98,75 +58,68 @@ var yyExca = [...]int8{
 
 const yyPrivate = 57344
 
-const yyLast = 78
+const yyLast = 77
 
 var yyAct = [...]int8{
-	39, 20, 19, 46, 20, 19, 33, 1, 19, 21,
-	22, 23, 21, 22, 23, 21, 22, 23, 21, 22,
-	23, 25, 30, 40, 26, 27, 28, 29, 18, 10,
-	11, 14, 12, 13, 2, 15, 16, 17, 6, 31,
-	18, 10, 11, 14, 12, 13, 9, 15, 16, 17,
-	4, 8, 3, 7, 34, 35, 36, 24, 5, 0,
-	0, 32, 0, 8, 0, 0, 0, 0, 38, 41,
-	44, 45, 43, 42, 0, 0, 0, 37,
+	34, 14, 33, 16, 22, 32, 18, 30, 31, 26,
+	40, 21, 5, 28, 15, 1, 5, 3, 2, 27,
+	24, 25, 17, 0, 29, 0, 23, 23, 23, 0,
+	35, 0, 0, 36, 37, 39, 0, 38, 0, 0,
+	41, 0, 43, 42, 23, 19, 20, 6, 7, 8,
+	9, 10, 11, 12, 13, 4, 0, 0, 0, 0,
+	0, 6, 7, 8, 9, 10, 11, 12, 13, 6,
+	7, 8, 9, 10, 11, 12, 13,
 }
 
 var yyPact = [...]int16{
-	24, -1000, -20, -7, 24, -1000, -1000, -1000, 36, -8,
-	-1000, -1000, -1000, -1000, -1000, -1000, -1000, -1000, -1000, 24,
-	24, 24, -1000, -1000, 36, -1000, -1000, -1000, -1000, -1000,
-	-1000, -26, -1000, 24, -26, -17, -1000, -1000, -23, 52,
-	-13, -1000, -1000, -1000, -1000, -1000, -1000,
+	51, -1000, -1000, -4, 59, 37, -1000, -1000, -1000, -1000,
+	-1000, -1000, -1000, -1000, 59, 59, 59, 3, 37, -1000,
+	-1000, -1000, 8, 37, -11, 1, -13, -1000, 37, 37,
+	37, 37, 59, -1000, 37, -1000, -1000, -1000, 5, 37,
+	37, 37, -1000, -1000,
 }
 
 var yyPgo = [...]int8{
-	0, 34, 52, 58, 57, 53, 38, 23, 7,
+	0, 11, 0, 17, 4, 2, 18, 15,
 }
 
 var yyR1 = [...]int8{
-	0, 8, 6, 6, 6, 6, 6, 6, 6, 6,
-	5, 2, 2, 2, 4, 4, 4, 4, 4, 4,
-	7, 7, 7, 7, 7, 3, 1, 1, 1, 1,
-	1, 1, 1, 1, 1,
+	0, 7, 6, 6, 6, 6, 3, 4, 5, 1,
+	1, 1, 1, 1, 1, 1, 1, 2, 2, 2,
 }
 
 var yyR2 = [...]int8{
-	0, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-	1, 1, 1, 2, 1, 1, 1, 1, 1, 1,
-	1, 1, 1, 1, 1, 6, 1, 3, 3, 3,
-	2, 3, 2, 2, 1,
+	0, 1, 5, 7, 5, 5, 3, 3, 4, 1,
+	1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
 }
 
 var yyChk = [...]int16{
-	-1000, -8, -1, -2, 26, -3, -6, -5, 27, 22,
-	5, 6, 8, 9, 7, 11, 12, 13, 4, 25,
-	24, 35, 36, 37, -4, 28, 31, 32, 33, 34,
-	29, -1, -2, 14, -1, -1, -1, -2, -1, 23,
-	-7, 17, 21, 20, 18, 19, 16,
+	-1000, -7, -6, -3, 4, -1, 10, 11, 12, 13,
+	14, 15, 16, 17, 5, 18, 7, -3, -2, 8,
+	9, -1, -4, -1, -4, -4, 6, -2, 5, -2,
+	18, 7, 18, -5, -2, -2, -5, -5, -4, -2,
+	5, -2, -5, -2,
 }
 
 var yyDef = [...]int8{
-	0, -2, 1, 26, 0, 34, 11, 12, 0, 0,
-	2, 3, 4, 5, 6, 7, 8, 9, 10, 0,
-	0, 0, 32, 33, 0, 14, 15, 16, 17, 18,
-	19, 30, 13, 0, 28, 29, 31, 27, 0, 0,
-	0, 20, 21, 22, 23, 24, 25,
+	0, -2, 1, 0, 0, 0, 9, 10, 11, 12,
+	13, 14, 15, 16, 0, 0, 0, 0, 0, 17,
+	18, 19, 0, 0, 0, 0, 0, 6, 0, 0,
+	0, 0, 0, 2, 0, 7, 4, 5, 0, 0,
+	0, 0, 3, 8,
 }
 
 var yyTok1 = [...]int8{
 	1, 3, 3, 3, 3, 3, 3, 3, 3, 3,
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-	3, 3, 3, 27, 3, 3, 3, 3, 3, 3,
-	14, 16, 3, 3, 15, 3, 3, 3, 3, 3,
-	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-	31, 28, 32,
+	3, 3, 18, 3, 3, 3, 3, 3, 3, 3,
+	4, 6, 3, 3, 3, 5, 7, 3, 8, 9,
+	10, 11, 12, 13, 14, 15, 16, 17,
 }
 
 var yyTok2 = [...]int8{
-	2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
-	12, 13, 17, 18, 19, 20, 21, 22, 23, 24,
-	25, 26, 29, 30, 33, 34, 35, 36, 37,
+	2, 3,
 }
 
 var yyTok3 = [...]int8{
@@ -511,171 +464,97 @@ yydefault:
 	case 1:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		{
-			yylex.(*Lexer).ast = &astRoot{yyDollar[1].expr}
+			yylex.(*Lexer).phoneNumber = yyDollar[1].phoneNumber
 		}
 	case 2:
-		yyDollar = yyS[yypt-1 : yypt+1]
+		yyDollar = yyS[yypt-5 : yypt+1]
 		{
-			yyVAL.expr = &SQLValue{Token: Token{token: STRING, literal: yyDollar[1].bytes}, Type: StrValue, Val: yyDollar[1].bytes[1 : len(yyDollar[1].bytes)-1]}
+			yyVAL.phoneNumber = PhoneNumber{AreaCode: yyDollar[1].areaCode, Exchange: yyDollar[3].exchange, Subscriber: yyDollar[5].subscriber}
 		}
 	case 3:
-		yyDollar = yyS[yypt-1 : yypt+1]
+		yyDollar = yyS[yypt-7 : yypt+1]
 		{
-			yyVAL.expr = &SQLValue{Token: Token{token: INTEGRAL, literal: yyDollar[1].bytes}, Type: IntValue, Val: yyDollar[1].bytes}
+			yyVAL.phoneNumber = PhoneNumber{AreaCode: yyDollar[2].areaCode, Exchange: yyDollar[5].exchange, Subscriber: yyDollar[7].subscriber}
 		}
 	case 4:
-		yyDollar = yyS[yypt-1 : yypt+1]
+		yyDollar = yyS[yypt-5 : yypt+1]
 		{
-			yyVAL.expr = &SQLValue{Token: Token{token: FLOAT, literal: yyDollar[1].bytes}, Type: FloatValue, Val: yyDollar[1].bytes}
+			yyVAL.phoneNumber = PhoneNumber{AreaCode: yyDollar[1].areaCode, Exchange: yyDollar[3].exchange, Subscriber: yyDollar[5].subscriber}
 		}
 	case 5:
-		yyDollar = yyS[yypt-1 : yypt+1]
+		yyDollar = yyS[yypt-5 : yypt+1]
 		{
-			yyVAL.expr = &SQLValue{Token: Token{token: BLOB, literal: yyDollar[1].bytes}, Type: BlobValue, Val: yyDollar[1].bytes}
+			yyVAL.phoneNumber = PhoneNumber{AreaCode: yyDollar[1].areaCode, Exchange: yyDollar[3].exchange, Subscriber: yyDollar[5].subscriber}
 		}
 	case 6:
-		yyDollar = yyS[yypt-1 : yypt+1]
+		yyDollar = yyS[yypt-3 : yypt+1]
 		{
-			yyVAL.expr = &SQLValue{Token: Token{token: HEXNUM, literal: yyDollar[1].bytes}, Type: HexNumValue, Val: yyDollar[1].bytes}
+			yyVAL.areaCode = AreaCode(yyDollar[1].string + yyDollar[2].string + yyDollar[3].string)
 		}
 	case 7:
-		yyDollar = yyS[yypt-1 : yypt+1]
+		yyDollar = yyS[yypt-3 : yypt+1]
 		{
-			yyVAL.expr = BoolValue{token: Token{token: TRUE, literal: yyDollar[1].bytes}, val: true}
+			yyVAL.exchange = Exchange(yyDollar[1].string + yyDollar[2].string + yyDollar[3].string)
 		}
 	case 8:
-		yyDollar = yyS[yypt-1 : yypt+1]
+		yyDollar = yyS[yypt-4 : yypt+1]
 		{
-			yyVAL.expr = BoolValue{token: Token{token: FALSE, literal: yyDollar[1].bytes}, val: false}
+			yyVAL.subscriber = Subscriber(yyDollar[1].string + yyDollar[2].string + yyDollar[3].string + yyDollar[4].string)
 		}
 	case 9:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		{
-			yyVAL.expr = &NullValue{token: Token{token: NULL, literal: yyDollar[1].bytes}}
+			yyVAL.string = string(yyDollar[1].byt)
 		}
 	case 10:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		{
-			if len(yyDollar[1].bytes) > MaxColumnNameLength {
-				yylex.Error(__yyfmt__.Sprintf("column length greater than %d", MaxColumnNameLength))
-				return 1
-			}
-			yyVAL.column = &Column{string(yyDollar[1].bytes)}
+			yyVAL.string = string(yyDollar[1].byt)
 		}
 	case 11:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		{
-			yyVAL.expr = yyDollar[1].expr
+			yyVAL.string = string(yyDollar[1].byt)
 		}
 	case 12:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		{
-			yyVAL.expr = yyDollar[1].column
+			yyVAL.string = string(yyDollar[1].byt)
 		}
 	case 13:
-		yyDollar = yyS[yypt-2 : yypt+1]
+		yyDollar = yyS[yypt-1 : yypt+1]
 		{
-			yyVAL.expr = &NotExpr{token: Token{token: NOT, literal: yyDollar[1].bytes}, expr: yyDollar[2].expr}
+			yyVAL.string = string(yyDollar[1].byt)
 		}
 	case 14:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		{
-			yyVAL.cmpOp = &EqualOperator{token: Token{token: int('='), literal: yyDollar[1].bytes}}
+			yyVAL.string = string(yyDollar[1].byt)
 		}
 	case 15:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		{
-			yyVAL.cmpOp = &LessThanOperator{token: Token{token: int('<'), literal: yyDollar[1].bytes}}
+			yyVAL.string = string(yyDollar[1].byt)
 		}
 	case 16:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		{
-			yyVAL.cmpOp = &GreaterThanOperator{token: Token{token: int('>'), literal: yyDollar[1].bytes}}
+			yyVAL.string = string(yyDollar[1].byt)
 		}
 	case 17:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		{
-			yyVAL.cmpOp = &LessEqualOperator{token: Token{token: LE, literal: yyDollar[1].bytes}}
+			yyVAL.string = string(yyDollar[1].byt)
 		}
 	case 18:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		{
-			yyVAL.cmpOp = &GreaterEqualOperator{token: Token{token: GE, literal: yyDollar[1].bytes}}
+			yyVAL.string = string(yyDollar[1].byt)
 		}
 	case 19:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		{
-			yyVAL.cmpOp = &NotEqualOperator{token: Token{token: NE, literal: yyDollar[1].bytes}}
-		}
-	case 20:
-		yyDollar = yyS[yypt-1 : yypt+1]
-		{
-			yyVAL.convertType = NoneStr
-		}
-	case 21:
-		yyDollar = yyS[yypt-1 : yypt+1]
-		{
-			yyVAL.convertType = TextStr
-		}
-	case 22:
-		yyDollar = yyS[yypt-1 : yypt+1]
-		{
-			yyVAL.convertType = RealStr
-		}
-	case 23:
-		yyDollar = yyS[yypt-1 : yypt+1]
-		{
-			yyVAL.convertType = IntegerStr
-		}
-	case 24:
-		yyDollar = yyS[yypt-1 : yypt+1]
-		{
-			yyVAL.convertType = NumericStr
-		}
-	case 25:
-		yyDollar = yyS[yypt-6 : yypt+1]
-		{
-			yyVAL.expr = &ConvertExpr{expr: yyDollar[3].expr, typ: yyDollar[5].convertType}
-		}
-	case 26:
-		yyDollar = yyS[yypt-1 : yypt+1]
-		{
-			yyVAL.expr = yyDollar[1].expr
-		}
-	case 27:
-		yyDollar = yyS[yypt-3 : yypt+1]
-		{
-			yyVAL.expr = &CmpExpr{left: yyDollar[1].expr, op: yyDollar[2].cmpOp, right: yyDollar[3].expr}
-		}
-	case 28:
-		yyDollar = yyS[yypt-3 : yypt+1]
-		{
-			yyVAL.expr = &AndExpr{token: Token{token: AND, literal: yyDollar[2].bytes}, left: yyDollar[1].expr, right: yyDollar[3].expr}
-		}
-	case 29:
-		yyDollar = yyS[yypt-3 : yypt+1]
-		{
-			yyVAL.expr = &OrExpr{token: Token{token: OR, literal: yyDollar[2].bytes}, left: yyDollar[1].expr, right: yyDollar[3].expr}
-		}
-	case 30:
-		yyDollar = yyS[yypt-2 : yypt+1]
-		{
-			yyVAL.expr = &NotExpr{token: Token{token: NOT, literal: yyDollar[1].bytes}, expr: yyDollar[2].expr}
-		}
-	case 31:
-		yyDollar = yyS[yypt-3 : yypt+1]
-		{
-			yyVAL.expr = &IsExpr{typ: IsStr, lhs: yyDollar[1].expr, rhs: yyDollar[3].expr}
-		}
-	case 32:
-		yyDollar = yyS[yypt-2 : yypt+1]
-		{
-			yyVAL.expr = &IsExpr{typ: IsNullStr, lhs: yyDollar[1].expr, rhs: &NullValue{token: Token{token: ISNULL, literal: yyDollar[2].bytes}}}
-		}
-	case 33:
-		yyDollar = yyS[yypt-2 : yypt+1]
-		{
-			yyVAL.expr = &IsExpr{typ: NotNullStr, lhs: yyDollar[1].expr, rhs: &NullValue{token: Token{token: NOTNULL, literal: yyDollar[2].bytes}}}
+			yyVAL.string = string(yyDollar[1].string)
 		}
 	}
 	goto yystack /* stack new state and value */

@@ -1,167 +1,132 @@
 %{
 package main
 
-const MaxColumnNameLength = 64
+type PhoneNumber struct {
+  AreaCode AreaCode
+  Exchange Exchange
+  Subscriber Subscriber
+}
+
+type AreaCode string
+type Exchange string
+type Subscriber string
 
 %}
 
 %union{
-  bool bool
+  areaCode AreaCode
+  exchange Exchange
+  subscriber Subscriber
+  phoneNumber PhoneNumber
+  byt byte
   string string
-  bytes []byte
-  expr expr 
-  cmpOp CmpOperatorNode
-  column *Column
-  convertType ConvertType
 }
 
-%token <bytes> IDENTIFIER STRING INTEGRAL HEXNUM FLOAT BLOB
-%token ERROR 
-%token <bytes> TRUE FALSE NULL
-%token <empty> '(' ',' ')'
-%token <empty> NONE INTEGER NUMERIC REAL TEXT CAST AS
+%token <empty> '(' '-' ')' '.' 
+%token <byt> '0' '1' '2' '3' '4' '5' '6' '7' '8' '9'
 
-%left <bytes> OR
-%left <bytes> AND
-%right <bytes> NOT '!'
-%left <bytes> '=' NE LIKE
-%left <bytes> '<' '>' LE GE IS ISNULL NOTNULL
+%type <string> digit_2_9 digit
+%type <areaCode> area_code
+%type <exchange> exchange
+%type <subscriber> subscriber
+%type <phoneNumber> phone_number
 
-%type <expr> expr value_expr
-%type <expr> function_call_keyword
 
-%type <cmpOp> cmp_op
-%type <column> column_name
-%type <expr> value_literal
-%type <convertType> convert_type
+// n##-n##-####
+// (n##) n##-####
+// n## n## ####
+// n##.n##.####
+
+// n=digits 2–9, #=digits 0–9
 
 %%
-start: 
-  expr { yylex.(*Lexer).ast = &astRoot{$1} } ;
-
-
-value_literal:
-  STRING
+start:
+  phone_number
   {
-    $$ = &SQLValue{Token : Token{token: STRING, literal : $1}, Type: StrValue, Val: $1[1:len($1)-1]}
-  }
-|  INTEGRAL
-  {
-    $$ = &SQLValue{Token : Token{token: INTEGRAL, literal : $1}, Type: IntValue, Val: $1}
-  }
-|  FLOAT
-  {
-    $$ = &SQLValue{Token : Token{token: FLOAT, literal : $1}, Type: FloatValue, Val: $1}
-  }
-| BLOB
-  {
-    $$ = &SQLValue{Token : Token{token: BLOB, literal : $1}, Type: BlobValue, Val: $1}
-  }
-|  HEXNUM
-  {
-    $$ = &SQLValue{Token : Token{token: HEXNUM, literal : $1}, Type: HexNumValue, Val: $1}
-  }
-|  TRUE
-  {
-    $$ = BoolValue{token : Token{token : TRUE, literal : $1}, val : true}
-  }
-| FALSE
-  {
-    $$ = BoolValue{token : Token{token : FALSE, literal : $1}, val : false}
-  }
-| NULL
-  {
-    $$ = &NullValue{token : Token{token: NULL, literal : $1}}
+    yylex.(*Lexer).phoneNumber = $1
   }
 
-
-column_name:
-  IDENTIFIER 
-  { 
-    if len($1) > MaxColumnNameLength {
-      yylex.Error(__yyfmt__.Sprintf("column length greater than %d", MaxColumnNameLength))
-      return 1
-    }
-    $$ = &Column{string($1)} 
-  };
-
-value_expr:
-  value_literal { $$ = $1 }
-| column_name { $$ = $1 }
-| '!' value_expr 
+phone_number:
+  area_code '-' exchange '-' subscriber
   {
-    $$ = &NotExpr{token: Token{token : NOT, literal : $1}, expr : $2}
+    $$ = PhoneNumber{AreaCode: $1, Exchange: $3, Subscriber: $5}
   }
-
-cmp_op:
-  '='
+| '(' area_code ')' ' ' exchange '-' subscriber
   {
-    $$ = &EqualOperator{token : Token{token: int('='), literal : $1}} 
+    $$ = PhoneNumber{AreaCode: $2, Exchange: $5, Subscriber: $7}
   }
-| '<'
+| area_code ' ' exchange ' ' subscriber
   {
-    $$ = &LessThanOperator{token : Token{token: int('<'), literal : $1}} 
+    $$ = PhoneNumber{AreaCode: $1, Exchange: $3, Subscriber: $5}
   }
-| '>'
+| area_code '.' exchange '.' subscriber
   {
-    $$ = &GreaterThanOperator{token : Token{token: int('>'), literal : $1}} 
-  }
-| LE
-  {
-    $$ = &LessEqualOperator{token : Token{token: LE, literal : $1}} 
-  }
-| GE
-  {
-    $$ = &GreaterEqualOperator{token : Token{token: GE, literal : $1}} 
-  }
-| NE
-  {
-    $$ = &NotEqualOperator{token : Token{token: NE, literal : $1}} 
+    $$ = PhoneNumber{AreaCode: $1, Exchange: $3, Subscriber: $5}
   }
 
-convert_type:
-  NONE { $$ = NoneStr}
-| TEXT { $$ = TextStr}
-| REAL { $$ = RealStr}
-| INTEGER { $$ = IntegerStr}
-| NUMERIC { $$ = NumericStr}
-
-function_call_keyword:
-  CAST '(' expr AS convert_type ')'
+area_code:
+  digit_2_9 digit digit
   {
-    $$ = &ConvertExpr{expr: $3, typ: $5}
+    $$ = AreaCode($1 + $2 + $3)
   }
 
-expr:
-  value_expr { $$ = $1 }
-| value_expr cmp_op value_expr 
-  {  
-    $$ = &CmpExpr{left: $1, op: $2, right: $3} 
+exchange:
+  digit_2_9 digit digit
+  {
+    $$ = Exchange($1 + $2 + $3)
   }
-| expr AND expr 
-  {  
-    $$ = &AndExpr{token: Token{token : AND, literal : $2}, left: $1, right: $3}
+
+subscriber:
+  digit digit digit digit
+  {
+    $$ = Subscriber($1 + $2 + $3 + $4)
   }
-| expr OR expr 
-  {  
-    $$ = &OrExpr{token: Token{token : OR, literal : $2}, left: $1, right: $3}
+
+digit_2_9: 
+  '2'
+  {
+    $$ = string($1)
   }
-| NOT expr 
-  {  
-    $$ = &NotExpr{token: Token{token : NOT, literal : $1}, expr : $2}
+| '3'
+  {
+    $$ = string($1)
   }
-| expr IS expr
-  {  
-    $$ = &IsExpr{typ: IsStr, lhs : $1, rhs : $3}
+| '4'
+  {
+    $$ = string($1)
   }
-| expr ISNULL
-  {  
-    $$ = &IsExpr{typ: IsNullStr, lhs : $1, rhs : &NullValue{token : Token{token: ISNULL, literal : $2}}}
+| '5'
+  {
+    $$ = string($1)
   }
-| expr NOTNULL
-  {  
-    $$ = &IsExpr{typ: NotNullStr, lhs : $1, rhs : &NullValue{token : Token{token: NOTNULL, literal : $2}}}
+| '6'
+  {
+    $$ = string($1)
   }
-| function_call_keyword
-;
+| '7'
+  {
+    $$ = string($1)
+  }
+| '8'
+  {
+    $$ = string($1)
+  }
+| '9'
+  {
+    $$ = string($1)
+  }
+
+digit:
+  '0'
+  {
+    $$ = string($1)
+  }
+| '1'
+  {
+    $$ = string($1)
+  }
+| digit_2_9
+  {
+    $$ = string($1)
+  }
 %%
