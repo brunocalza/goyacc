@@ -1,5 +1,5 @@
 %{
-package main
+package phone
 
 type PhoneNumber struct {
   AreaCode AreaCode

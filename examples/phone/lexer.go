@@ -1,4 +1,4 @@
-package main
+package phone
 
 import "fmt"
 
@@ -23,7 +23,6 @@ func (l *Lexer) Lex(lval *yySymType) int {
 	case 0:
 		return 0
 	case '(', '.', ')', ' ', '-':
-		lval.byt = ch
 		l.pos++
 		return int(ch)
 	}
