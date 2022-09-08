@@ -8,4 +8,7 @@ import (
 
 func main() {
 	fmt.Println(phone.Parse("800.555.1234"))
+	fmt.Println(phone.Parse("(800) 555-1234"))
+	fmt.Println(phone.Parse("800 555 1234"))
+	fmt.Println(phone.Parse("800-555-1234"))
 }

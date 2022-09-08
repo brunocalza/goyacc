@@ -22,7 +22,7 @@ type Subscriber string
   string string
 }
 
-%token <empty> '(' '-' ')' '.' 
+%token <empty> '(' '-' ')' '.' ' '
 %token <byt> '0' '1' '2' '3' '4' '5' '6' '7' '8' '9'
 
 %type <string> digit_2_9 digit

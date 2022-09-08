@@ -483,6 +483,6 @@ memory: parser 41/240000
 168 shift entries, 1 exceptions
 27 goto entries
 13 entries saved by goto default
-Optimizer space used: output 77/240000
-77 table entries, 14 zero
+Optimizer space used: output 78/240000
+78 table entries, 15 zero
 maximum spread: 18, maximum offset: 41
